@@ -1,0 +1,105 @@
+/*
+//////////////////////////////
+Tema visual do EduTrack: cores, fonte e estilos de base.
+As cores ficam aqui como tokens; as telas usam só as classes do Tailwind
+geradas a partir deles, e nenhuma classe CSS própria.
+//////////////////////////////
+*/
+
+@import 'tailwindcss';
+
+/*
+//////////////////////////////
+Tokens do tema
+Cada token vira classe do Tailwind (bg-primaria, rounded-cartao...).
+O vermelho "marca" fica reservado ao menu, ao logotipo e ao PDF.
+A barra "esvaziar" dura 10 s, o mesmo prazo do botão Desfazer.
+//////////////////////////////
+*/
+
+@theme {
+  --color-primaria: #1d4f8c;
+  --color-primaria-escura: #143a68;
+  --color-primaria-suave: #e8f0fa;
+  --color-marca: #9f1d20;
+  --color-perigo: #b42318;
+  --color-perigo-suave: #fdecea;
+  --color-alerta: #b45309;
+  --color-alerta-suave: #fef3c7;
+  --color-sucesso: #15803d;
+  --color-sucesso-suave: #e7f6ec;
+  --color-fundo: #f4f6f9;
+  --color-superficie: #ffffff;
+  --color-borda: #dde3ea;
+  --color-texto: #1b2533;
+  --color-texto-suave: #5b6778;
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-cartao: 10px;
+  --radius-controle: 8px;
+
+  --shadow-cartao: 0 1px 2px rgb(27 37 51 / 0.06);
+
+  --animate-esvaziar: esvaziar 10s linear forwards;
+  @keyframes esvaziar {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0;
+    }
+  }
+}
+
+/*
+//////////////////////////////
+Base da aplicação
+As barras de rolagem ficam escondidas, mas a rolagem continua
+funcionando pelo mouse, pelo toque e pelo teclado.
+//////////////////////////////
+*/
+
+@layer base {
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--color-fundo);
+    color: var(--color-texto);
+    font-synthesis: none;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  * {
+    scrollbar-width: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
+//////////////////////////////
+Troca de tela
+Só a área de conteúdo esmaece; o menu e o cabeçalho trocam na hora.
+Com movimento reduzido, nenhuma transição é animada.
+//////////////////////////////
+*/
+
+:root {
+  view-transition-name: none;
+}
+::view-transition-group(conteudo),
+::view-transition-old(conteudo),
+::view-transition-new(conteudo) {
+  animation-duration: 150ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}

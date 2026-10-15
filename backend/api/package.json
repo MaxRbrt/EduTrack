@@ -1,0 +1,28 @@
+{
+  "name": "edutrack-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env --watch src/servidor.ts",
+    "iniciar": "node --env-file=.env src/servidor.ts",
+    "preparar-banco": "node --env-file=.env src/scripts/prepararBanco.ts",
+    "criar-usuario": "node --env-file=.env src/scripts/criarUsuario.ts",
+    "tipos": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.5",
+    "fastify": "^5.12.5",
+    "mysql2": "^3.24.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.5",
+    "prettier": "^3.9.8",
+    "typescript": "^7.0.2"
+  }
+}
