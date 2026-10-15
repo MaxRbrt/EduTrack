@@ -102,13 +102,23 @@ npm.cmd run preparar-banco
 
 O `preparar-banco` cria o banco `edutrack`, aplica as migrações de `backend/mysql/migracoes/` que ainda faltam e cria o usuário MySQL `edutrack_api`, **sem permissão de apagar** alunos, atrasos e usuários. Pode ser rodado de novo sem problema: só aplica o que falta.
 
-### 5. Criar o usuário da portaria
+Na primeira instalação ele também cria o **login padrão da portaria**:
+
+| Usuário     | Senha       |
+| ----------- | ----------- |
+| `porteiro1` | `porteiro1` |
+
+O login padrão só é criado quando ainda não existe nenhum porteiro; rodar o `preparar-banco` de novo nunca redefine a senha.
+
+### 5. Trocar a senha e criar outros porteiros
+
+**Antes do uso com dados reais, troque a senha padrão:**
 
 ```powershell
 npm.cmd run criar-usuario -- porteiro1
 ```
 
-O script pede a senha (mínimo 8 caracteres). Rodar de novo com o mesmo nome troca a senha e encerra as sessões abertas desse usuário. Não existe cadastro de usuário pela tela.
+O script pede a nova senha (mínimo 8 caracteres; ela aparece na tela enquanto é digitada). O mesmo comando com outro nome (`porteiro2`, ...) cria mais porteiros. Rodar de novo com um nome existente troca a senha e encerra as sessões abertas desse usuário. O nome do usuário não diferencia maiúsculas; a senha diferencia. Não existe cadastro de usuário pela tela.
 
 ### 6. Gerar as telas
 
@@ -130,7 +140,7 @@ De volta em `backend/api/`:
 npm.cmd run iniciar
 ```
 
-Abra **http://localhost:3001** e entre com o usuário criado no passo 5.
+Abra **http://localhost:3001** e entre com `porteiro1` / `porteiro1` (ou com a senha trocada no passo 5).
 
 ## Modo de desenvolvimento
 
@@ -374,7 +384,7 @@ Teste a restauração em ambiente separado antes de depender desse backup. Os ar
 
 **Produção com dados reais:** ainda não aprovada. Antes do uso real:
 
-- trocar senhas de teste por senhas fortes;
+- trocar a senha do login padrão `porteiro1` e as senhas de teste por senhas fortes;
 - criar testes automatizados para sessão, alunos, registros, anulação e fotos da API;
 - executar os testes da API contra um MySQL isolado;
 - testar em tablet real: foto, perda de rede, fila e reenvio único;
