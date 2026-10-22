@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 80">
+  <g transform="rotate(-12 70 40)" stroke-linejoin="round" stroke-linecap="round">
+    <rect x="6" y="26" width="128" height="30" rx="6" fill="#fff" stroke="#fff" stroke-width="10" />
+    <rect x="6" y="26" width="128" height="30" rx="6" fill="#34c27a" stroke="#14213d" stroke-width="3" />
+    <path
+      d="M18 28v10M28 28v6M38 28v10M48 28v6M58 28v10M68 28v6M78 28v10M88 28v6M98 28v10M108 28v6M118 28v10"
+      stroke="#14213d"
+      stroke-width="2.5"
+    />
+  </g>
+</svg>

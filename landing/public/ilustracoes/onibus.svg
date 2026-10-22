@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 104">
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <path
+      d="M10 70V32Q10 22 20 22H112Q124 22 128 34L134 52V70Q134 78 126 78H18Q10 78 10 70Z"
+      fill="#fff"
+      stroke="#fff"
+      stroke-width="12"
+    />
+    <circle cx="36" cy="82" r="13" fill="#fff" stroke="#fff" stroke-width="8" />
+    <circle cx="106" cy="82" r="13" fill="#fff" stroke="#fff" stroke-width="8" />
+    <path
+      d="M10 70V32Q10 22 20 22H112Q124 22 128 34L134 52V70Q134 78 126 78H18Q10 78 10 70Z"
+      fill="#ffc83d"
+      stroke="#14213d"
+      stroke-width="3"
+    />
+    <rect x="18" y="30" width="20" height="18" rx="4" fill="#bfe0ff" stroke="#14213d" stroke-width="2.5" />
+    <rect x="44" y="30" width="20" height="18" rx="4" fill="#bfe0ff" stroke="#14213d" stroke-width="2.5" />
+    <rect x="70" y="30" width="20" height="18" rx="4" fill="#bfe0ff" stroke="#14213d" stroke-width="2.5" />
+    <path d="M100 30H114Q119 30 121 35L126 50H100Z" fill="#bfe0ff" stroke="#14213d" stroke-width="2.5" />
+    <rect x="10" y="56" width="124" height="5" fill="#14213d" />
+    <text
+      x="52"
+      y="72"
+      font-family="Arial, sans-serif"
+      font-size="8"
+      font-weight="700"
+      letter-spacing="1"
+      fill="#14213d"
+    >
+      ESCOLAR
+    </text>
+    <circle cx="129" cy="66" r="3" fill="#fff" stroke="#14213d" stroke-width="1.5" />
+    <circle cx="36" cy="82" r="12" fill="#14213d" />
+    <circle cx="36" cy="82" r="5" fill="#c3cddc" />
+    <circle cx="106" cy="82" r="12" fill="#14213d" />
+    <circle cx="106" cy="82" r="5" fill="#c3cddc" />
+  </g>
+</svg>

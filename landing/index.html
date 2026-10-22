@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EduTrack · Atrasos na portaria</title>
+    <meta
+      name="description"
+      content="EduTrack registra os alunos que chegam atrasados na portaria da escola: foto pela webcam, busca pelo nome e motivo. A coordenação acompanha tudo no painel."
+    />
+    <meta name="theme-color" content="#1d4a3b" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+    />
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="i-capelo" viewBox="0 0 24 24">
+        <path
+          d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
+        />
+        <path d="M22 10v6" />
+        <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+      </symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24">
+        <path
+          d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+        />
+        <circle cx="12" cy="13" r="3" />
+      </symbol>
+      <symbol id="i-busca" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.3-4.3" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+      <symbol id="i-alerta" viewBox="0 0 24 24">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+        <path d="M12 9v4" />
+        <path d="M12 17h.01" />
+      </symbol>
+      <symbol id="i-sem-wifi" viewBox="0 0 24 24">
+        <path d="M12 20h.01" />
+        <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+        <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
+        <path d="M19 12.859a10 10 0 0 0-2.007-1.523" />
+        <path d="M2 8.82a15 15 0 0 1 4.177-2.643" />
+        <path d="M22 8.82a15 15 0 0 0-11.288-3.764" />
+        <path d="m2 2 20 20" />
+      </symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24">
+        <path d="M12 20h.01" />
+        <path d="M2 8.82a15 15 0 0 1 20 0" />
+        <path d="M5 12.859a10 10 0 0 1 14 0" />
+        <path d="M8.5 16.429a5 5 0 0 1 7 0" />
+      </symbol>
+      <symbol id="i-pdf" viewBox="0 0 24 24">
+        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+        <path d="M12 18v-6" />
+        <path d="m9 15 3 3 3-3" />
+      </symbol>
+      <symbol id="i-anular" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="m4.9 4.9 14.2 14.2" />
+      </symbol>
+      <symbol id="i-cadeado" viewBox="0 0 24 24">
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </symbol>
+      <symbol id="i-servidor" viewBox="0 0 24 24">
+        <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+        <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+        <path d="M6 6h.01" />
+        <path d="M6 18h.01" />
+      </symbol>
+      <symbol id="i-painel" viewBox="0 0 24 24">
+        <rect width="7" height="9" x="3" y="3" rx="1" />
+        <rect width="7" height="5" x="14" y="3" rx="1" />
+        <rect width="7" height="9" x="14" y="12" rx="1" />
+        <rect width="7" height="5" x="3" y="16" rx="1" />
+      </symbol>
+      <symbol id="i-relogio" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 6v6l4 2" />
+      </symbol>
+      <symbol id="i-alunos" viewBox="0 0 24 24">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </symbol>
+      <symbol id="i-seta" viewBox="0 0 24 24">
+        <path d="M7 7h10v10" />
+        <path d="M7 17 17 7" />
+      </symbol>
+      <symbol id="i-repetir" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </symbol>
+    </svg>
+
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+    <header class="cabecalho">
+      <div class="cabecalho__dentro">
+        <a class="marca" href="#topo" aria-label="EduTrack, voltar ao topo">
+          <span class="marca__selo">
+            <svg class="icone"><use href="#i-capelo" /></svg>
+          </span>
+          <span class="marca__texto">
+            <strong>EduTrack</strong>
+            <small>Atrasos na portaria</small>
+          </span>
+        </a>
+        <nav class="cabecalho__nav" aria-label="Seções">
+          <a href="#portaria">Portaria</a>
+          <a href="#coordenacao">Coordenação</a>
+          <a href="#offline">Sem internet</a>
+          <a href="#projeto">Projeto</a>
+        </nav>
+        <a
+          class="botao botao--pequeno botao--contorno"
+          href="https://github.com/MaxRbrt/EduTrack"
+          target="_blank"
+          rel="noopener"
+        >
+          GitHub
+          <svg class="icone"><use href="#i-seta" /></svg>
+        </a>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" id="topo" aria-labelledby="hero-titulo">
+        <svg
+          class="rabiscos"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter id="giz-aspero">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="ruido" />
+              <feDisplacementMap in="SourceGraphic" in2="ruido" scale="3" />
+            </filter>
+          </defs>
+          <g
+            filter="url(#giz-aspero)"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path class="rabisco" d="M100 812A50 50 0 0 1 200 812" />
+            <path class="rabisco" d="M64 812H236" />
+            <path class="rabisco" d="M150 752V730" />
+            <path class="rabisco" d="M192.4 769.6L206.6 755.4" />
+            <path class="rabisco" d="M107.6 769.6L93.4 755.4" />
+            <path class="rabisco" d="M208 796.5L227.3 791.3" />
+            <path class="rabisco" d="M92 796.5L72.7 791.3" />
+            <path
+              class="rabisco"
+              transform="translate(1326 108) scale(.56)"
+              stroke-width="5"
+              d="M60 12L72.9 44.2L107.6 46.5L80.9 68.8L89.4 102.5L60 84L30.6 102.5L39.1 68.8L12.4 46.5L47.1 44.2Z"
+            />
+            <path class="rabisco" d="M1330 730V820" />
+            <path class="rabisco" d="M1360 730V820" />
+            <path class="rabisco" d="M1300 760H1390" />
+            <path class="rabisco" d="M1300 790H1390" />
+            <path class="rabisco" d="M1307 737L1323 753" />
+            <path class="rabisco" d="M1323 737L1307 753" />
+            <circle class="rabisco" cx="1375" cy="805" r="9" />
+            <path class="rabisco" d="M850 172C850 144 860 130 872 128C884 130 894 144 894 172Z" />
+            <path class="rabisco" d="M872 128V118" />
+            <path class="rabisco" d="M842 140Q836 150 842 160" />
+            <path class="rabisco" d="M902 140Q908 150 902 160" />
+            <g class="rabisco--largo">
+              <path class="rabisco" d="M690 700C720 640 760 612 812 598" />
+              <path class="rabisco" d="M812 598L790 590" />
+              <path class="rabisco" d="M812 598L798 616" />
+            </g>
+          </g>
+          <g filter="url(#giz-aspero)" fill="currentColor">
+            <text class="rabisco-texto" x="560" y="128" transform="rotate(-4 560 128)">
+              a² + b² = c²
+            </text>
+            <text
+              class="rabisco-texto rabisco--largo"
+              x="600"
+              y="748"
+              transform="rotate(-6 600 748)"
+            >
+              olha a hora!
+            </text>
+          </g>
+        </svg>
+
+        <div class="hero__dentro">
+          <div class="hero__texto">
+            <p class="rotulo rotulo--giz hero__rotulo">Registro de atrasos na portaria</p>
+            <h1 class="hero__titulo" id="hero-titulo">
+              <span class="linha"><span>O portão fecha</span></span>
+              <span class="linha"
+                ><span
+                  >às
+                  <span class="destaque-giz"
+                    >07:00<svg
+                      class="circulo-giz"
+                      viewBox="0 0 300 117"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M40 70C30 30 120 8 200 12C280 16 296 60 260 88C220 112 90 114 40 96C6 84 12 46 70 30"
+                      /></svg></span
+                  >.</span
+                ></span
+              >
+            </h1>
+            <p class="hero__lede">
+              Quem chega depois passa pelo EduTrack: foto na webcam, busca do aluno pelo nome e
+              motivo do atraso. A coordenação acompanha tudo no painel, ao longo do ano letivo.
+            </p>
+            <div class="hero__acoes">
+              <a class="botao botao--amarelo" href="#portaria">Ver como funciona</a>
+              <a
+                class="botao botao--fantasma"
+                href="https://github.com/MaxRbrt/EduTrack"
+                target="_blank"
+                rel="noopener"
+              >
+                Código no GitHub
+                <svg class="icone"><use href="#i-seta" /></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="hero__relogio">
+            <canvas class="relogio-canvas" aria-hidden="true"></canvas>
+            <svg class="relogio-reserva" viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="94" fill="#14213d" />
+              <circle cx="100" cy="100" r="84" fill="#f6f6f3" />
+              <path d="M100 100 L100 26 A74 74 0 0 1 170.4 77.1 Z" fill="#e5383b" opacity=".2" />
+              <line
+                x1="100"
+                y1="100"
+                x2="75.3"
+                y2="134"
+                stroke="#14213d"
+                stroke-width="6"
+                stroke-linecap="round"
+              />
+              <line
+                x1="100"
+                y1="100"
+                x2="162.8"
+                y2="79.6"
+                stroke="#14213d"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <line x1="100" y1="112" x2="100" y2="30" stroke="#e5383b" stroke-width="2" />
+              <circle cx="100" cy="100" r="5" fill="#e5383b" />
+            </svg>
+            <div class="leitura" aria-live="off">
+              <span class="leitura__hora">06:58</span>
+              <span class="leitura__estado">Portão aberto</span>
+            </div>
+          </div>
+        </div>
+        <p class="hero__dica" aria-hidden="true">Role para o relógio andar</p>
+      </section>
+
+      <div class="letreiro" aria-hidden="true">
+        <div class="letreiro__trilho">
+          <div class="letreiro__grupo">
+            <span class="letreiro__item"><b>07:08</b> Marina · Ônibus atrasou</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:09</b> Rafael · Trânsito</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:11</b> Caio · Perdeu a hora</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:12</b> João Vítor · Ônibus atrasou</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:15</b> Bia · Consulta médica</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:21</b> Davi · Chuva forte</span>
+            <span class="letreiro__sep">★</span>
+          </div>
+          <div class="letreiro__grupo">
+            <span class="letreiro__item"><b>07:08</b> Marina · Ônibus atrasou</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:09</b> Rafael · Trânsito</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:11</b> Caio · Perdeu a hora</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:12</b> João Vítor · Ônibus atrasou</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:15</b> Bia · Consulta médica</span>
+            <span class="letreiro__sep">★</span>
+            <span class="letreiro__item"><b>07:21</b> Davi · Chuva forte</span>
+            <span class="letreiro__sep">★</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="secao portaria" id="portaria" aria-labelledby="portaria-titulo">
+        <div class="portaria__palco">
+          <div class="adesivos" aria-hidden="true">
+            <span class="adesivo adesivo--lapis-portaria" data-paralaxe="0.4">
+              <img src="ilustracoes/lapis.svg" alt="" />
+            </span>
+            <span class="adesivo adesivo--estrela-portaria" data-paralaxe="0.7">
+              <img src="ilustracoes/estrela.svg" alt="" />
+            </span>
+          </div>
+
+          <div class="portaria__dentro">
+            <div class="portaria__texto">
+              <p class="rotulo">Na portaria</p>
+              <h2 class="titulo-secao" id="portaria-titulo">Foto, nome, motivo. Pronto.</h2>
+              <ol class="passos">
+                <li class="passo ativo" data-passo="0">
+                  <button class="passo__botao" type="button">
+                    <span class="passo__numero">1</span>
+                    <span class="passo__corpo">
+                      <strong>Foto</strong>
+                      <span>O porteiro tira a foto do aluno pela webcam, ali na entrada.</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="passo" data-passo="1">
+                  <button class="passo__botao" type="button">
+                    <span class="passo__numero">2</span>
+                    <span class="passo__corpo">
+                      <strong>Aluno</strong>
+                      <span
+                        >Digita parte do nome. A busca acha mesmo com erro de digitação ou sem
+                        acento.</span
+                      >
+                    </span>
+                  </button>
+                </li>
+                <li class="passo" data-passo="2">
+                  <button class="passo__botao" type="button">
+                    <span class="passo__numero">3</span>
+                    <span class="passo__corpo">
+                      <strong>Motivo</strong>
+                      <span>Escolhe um motivo da lista ou escreve o seu.</span>
+                    </span>
+                  </button>
+                </li>
+                <li class="passo" data-passo="3">
+                  <button class="passo__botao" type="button">
+                    <span class="passo__numero">4</span>
+                    <span class="passo__corpo">
+                      <strong>Confirmação</strong>
+                      <span
+                        >Registro salvo com o horário. No terceiro atraso do ano, aparece o aviso de
+                        reincidência. Errou? O botão Desfazer fica ativo por 10 segundos.</span
+                      >
+                    </span>
+                  </button>
+                </li>
+              </ol>
+            </div>
+
+            <div class="aparelho" aria-hidden="true">
+              <div class="aparelho__tela app">
+                <div class="app__faixa"></div>
+                <div class="app__topo">
+                  <strong>Registrar atraso</strong>
+                  <span class="app__chip app__chip--online">
+                    <i class="ponto"></i>
+                    Online
+                  </span>
+                  <span class="app__chip">07:12</span>
+                </div>
+
+                <div class="tela-passo ativa" data-tela="0">
+                  <div class="camera">
+                    <svg
+                      class="camera__aluno"
+                      viewBox="0 0 160 120"
+                      preserveAspectRatio="xMidYMid slice"
+                    >
+                      <rect width="160" height="120" fill="#2a3540" />
+                      <rect x="0" y="78" width="160" height="42" fill="#33414d" />
+                      <circle cx="80" cy="50" r="20" fill="#c9b8a6" />
+                      <path
+                        d="M80 26c-14 0-22 8-22 18 6-6 14-8 22-8s16 2 22 8c0-10-8-18-22-18z"
+                        fill="#3b2a20"
+                      />
+                      <path d="M44 120c2-22 18-34 36-34s34 12 36 34z" fill="#1d4f8c" />
+                      <path d="M70 88l10 12 10-12" fill="none" stroke="#f4f6f9" stroke-width="3" />
+                    </svg>
+                    <span class="camera__canto camera__canto--1"></span>
+                    <span class="camera__canto camera__canto--2"></span>
+                    <span class="camera__canto camera__canto--3"></span>
+                    <span class="camera__canto camera__canto--4"></span>
+                    <span class="camera__rotulo"><i class="ponto ponto--rec"></i>Câmera</span>
+                    <span class="camera__flash"></span>
+                  </div>
+                  <span class="app__botao app__botao--cheio camera__botao">
+                    <svg class="icone"><use href="#i-camera" /></svg>
+                    Tirar foto
+                  </span>
+                </div>
+
+                <div class="tela-passo" data-tela="1">
+                  <div class="app__campo">
+                    <svg class="icone"><use href="#i-busca" /></svg>
+                    <span class="busca__texto"></span><span class="busca__cursor"></span>
+                  </div>
+                  <ul class="resultados">
+                    <li class="resultado resultado--escolhido">
+                      <span class="avatar">JV</span>
+                      <span>
+                        <strong>João Vítor Almeida</strong>
+                        <small>8º ano B</small>
+                      </span>
+                    </li>
+                    <li class="resultado">
+                      <span class="avatar">JV</span>
+                      <span>
+                        <strong>João Vitório Santos</strong>
+                        <small>6º ano A</small>
+                      </span>
+                    </li>
+                  </ul>
+                  <p class="app__nota">Achou "João Vítor" a partir de "joao vitr".</p>
+                </div>
+
+                <div class="tela-passo" data-tela="2">
+                  <div class="cartao-aluno">
+                    <span class="avatar avatar--grande">JV</span>
+                    <span>
+                      <strong>João Vítor Almeida</strong>
+                      <small>8º ano B · chegou às 07:12</small>
+                    </span>
+                  </div>
+                  <p class="app__legenda">Motivo do atraso</p>
+                  <div class="motivos">
+                    <span class="motivo motivo--escolhido">Ônibus atrasou</span>
+                    <span class="motivo">Consulta médica</span>
+                    <span class="motivo">Perdeu a hora</span>
+                    <span class="motivo">Trânsito</span>
+                    <span class="motivo">Outro</span>
+                  </div>
+                  <span class="app__area">Observação (opcional)</span>
+                  <span class="app__botao app__botao--cheio">Registrar atraso</span>
+                </div>
+
+                <div class="tela-passo" data-tela="3">
+                  <div class="sucesso">
+                    <svg class="sucesso__icone" viewBox="0 0 52 52">
+                      <circle class="sucesso__circulo" cx="26" cy="26" r="23" pathLength="1" />
+                      <path class="sucesso__check" d="M15 27l7 7 15-16" pathLength="1" />
+                    </svg>
+                    <strong>Atraso registrado</strong>
+                    <small>João Vítor Almeida · 07:12</small>
+                  </div>
+                  <dl class="resumo">
+                    <div>
+                      <dt>Motivo</dt>
+                      <dd>Ônibus atrasou</dd>
+                    </div>
+                    <div>
+                      <dt>Atrasos no ano</dt>
+                      <dd>3</dd>
+                    </div>
+                  </dl>
+                  <div class="aviso-reincidencia">
+                    <svg class="icone"><use href="#i-alerta" /></svg>
+                    <span><strong>3º atraso no ano.</strong> Vale avisar a coordenação.</span>
+                  </div>
+                  <span class="app__botao desfazer">
+                    Desfazer
+                    <span class="desfazer__barra"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="secao secao--onda coordenacao"
+        id="coordenacao"
+        aria-labelledby="coordenacao-titulo"
+      >
+        <div class="adesivos" aria-hidden="true">
+          <span class="adesivo adesivo--sino" data-paralaxe="0.8">
+            <img src="ilustracoes/sino.svg" alt="" />
+          </span>
+          <span class="adesivo adesivo--regua" data-paralaxe="0.5">
+            <img src="ilustracoes/regua.svg" alt="" />
+          </span>
+        </div>
+
+        <div class="secao__dentro coordenacao__grade">
+          <div class="coordenacao__texto">
+            <p class="rotulo">Na coordenação</p>
+            <h2 class="titulo-secao" id="coordenacao-titulo">
+              O ano letivo inteiro, num painel só.
+            </h2>
+            <p class="texto-corrido" data-revelar>
+              Totais do dia, do mês e do ano. Quem mais se atrasa. Em que dia da semana e em que
+              horário os atrasos se concentram. Dá para filtrar e levar tudo para reunião em PDF.
+            </p>
+            <ul class="lista-marcada" data-revelar>
+              <li>Histórico completo de cada aluno, com perfil e todos os registros.</li>
+              <li>Cadastro de alunos com foto, edição, desativação e reativação.</li>
+              <li>PDF gerado no próprio navegador, sem as fotos dos alunos.</li>
+            </ul>
+          </div>
+
+          <figure class="navegador" data-revelar>
+            <div class="navegador__barra" aria-hidden="true">
+              <i></i><i></i><i></i>
+              <span>EduTrack · Painel</span>
+            </div>
+            <div class="painel app" aria-hidden="true">
+              <aside class="painel__lateral">
+                <span class="painel__faixa"></span>
+                <span class="painel__selo">
+                  <svg class="icone"><use href="#i-capelo" /></svg>
+                </span>
+                <span class="painel__item painel__item--ativo">
+                  <svg class="icone"><use href="#i-painel" /></svg>
+                </span>
+                <span class="painel__item">
+                  <svg class="icone"><use href="#i-relogio" /></svg>
+                </span>
+                <span class="painel__item">
+                  <svg class="icone"><use href="#i-alunos" /></svg>
+                </span>
+              </aside>
+              <div class="painel__corpo">
+                <div class="painel__topo">
+                  <strong>Painel</strong>
+                  <span class="app__chip">Ano 2026</span>
+                  <span class="app__chip">Todas as turmas</span>
+                  <span class="app__botao app__botao--pequeno">
+                    <svg class="icone"><use href="#i-pdf" /></svg>
+                    Exportar PDF
+                  </span>
+                </div>
+                <div class="estatisticas">
+                  <div class="estatistica">
+                    <small>Hoje</small>
+                    <strong data-contar="14">14</strong>
+                  </div>
+                  <div class="estatistica">
+                    <small>Outubro</small>
+                    <strong data-contar="238">238</strong>
+                  </div>
+                  <div class="estatistica">
+                    <small>Ano letivo</small>
+                    <strong data-contar="1902">1.902</strong>
+                  </div>
+                </div>
+                <div class="painel__graficos">
+                  <div class="grafico">
+                    <small>Por horário de chegada</small>
+                    <div class="barras">
+                      <span style="--valor: 1"><i></i><b>07:00</b></span>
+                      <span style="--valor: 0.74"><i></i><b>:05</b></span>
+                      <span style="--valor: 0.43"><i></i><b>:10</b></span>
+                      <span style="--valor: 0.26"><i></i><b>:15</b></span>
+                      <span style="--valor: 0.14"><i></i><b>:20</b></span>
+                      <span style="--valor: 0.08"><i></i><b>:25+</b></span>
+                    </div>
+                  </div>
+                  <div class="grafico">
+                    <small>Reincidentes</small>
+                    <ul class="reincidentes">
+                      <li><span>Ana Clara Ribeiro</span><em>9º A</em><b>7</b></li>
+                      <li><span>Pedro Henrique Lima</span><em>7º B</em><b>5</b></li>
+                      <li><span>Lara Monteiro</span><em>8º C</em><b>4</b></li>
+                      <li><span>João Vítor Almeida</span><em>8º B</em><b>3</b></li>
+                    </ul>
+                  </div>
+                  <div class="grafico grafico--largo">
+                    <small>Atrasos por mês</small>
+                    <svg class="grafico-linha" viewBox="-10 0 660 92">
+                      <path
+                        class="grafico-linha__area"
+                        d="M0 42.7L80 26.8L160 30.1L240 18.4L320 36.1L400 57.6L480 20.3L560 19.8L640 24.5V92H0Z"
+                      />
+                      <path
+                        class="grafico-linha__traco"
+                        d="M0 42.7L80 26.8L160 30.1L240 18.4L320 36.1L400 57.6L480 20.3L560 19.8L640 24.5"
+                      />
+                      <circle class="grafico-linha__ponto" cx="640" cy="24.5" r="6" />
+                    </svg>
+                    <div class="grafico-linha__meses">
+                      <span>Fev</span><span>Mar</span><span>Abr</span><span>Mai</span
+                      ><span>Jun</span><span>Jul</span><span>Ago</span><span>Set</span
+                      ><span>Out</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="legenda">Tela ilustrativa, com dados de demonstração.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="secao secao--onda offline" id="offline" aria-labelledby="offline-titulo">
+        <div class="adesivos" aria-hidden="true">
+          <span class="adesivo adesivo--aviao" data-paralaxe="0.9">
+            <img src="ilustracoes/aviao.svg" alt="" />
+          </span>
+          <span class="adesivo adesivo--estrela-offline" data-paralaxe="0.4">
+            <img src="ilustracoes/estrela.svg" alt="" />
+          </span>
+        </div>
+
+        <div class="secao__dentro offline__grade">
+          <div class="offline__texto">
+            <p class="rotulo">Sem internet</p>
+            <h2 class="titulo-secao" id="offline-titulo">A conexão caiu. O registro, não.</h2>
+            <p class="texto-corrido" data-revelar>
+              A portaria continua registrando. Os atrasos ficam guardados no próprio navegador e são
+              enviados sozinhos quando a internet volta, sem entrar duplicado.
+            </p>
+            <button class="botao botao--pequeno botao--contorno offline__repetir" type="button">
+              <svg class="icone"><use href="#i-repetir" /></svg>
+              Ver de novo
+            </button>
+          </div>
+
+          <div class="fila" aria-hidden="true">
+            <svg class="fila__rota">
+              <path class="fila__rota-base" />
+              <path class="fila__rota-trilha" />
+            </svg>
+            <img class="aviaozinho" src="ilustracoes/aviao.svg" alt="" />
+            <img class="aviaozinho" src="ilustracoes/aviao.svg" alt="" />
+            <img class="aviaozinho" src="ilustracoes/aviao.svg" alt="" />
+
+            <div class="fila__lado">
+              <span class="fila__status">
+                <svg class="icone fila__icone-off"><use href="#i-sem-wifi" /></svg>
+                <svg class="icone fila__icone-on"><use href="#i-wifi" /></svg>
+                <span class="fila__status-texto">Sem conexão</span>
+              </span>
+              <p class="fila__titulo">Fila no navegador</p>
+              <ul class="fila__itens">
+                <li class="fila__item"><b>07:08</b> Marina Costa · 6º A</li>
+                <li class="fila__item"><b>07:11</b> Caio Ferreira · 9º B</li>
+                <li class="fila__item"><b>07:12</b> João Vítor Almeida · 8º B</li>
+              </ul>
+              <p class="fila__vazia">
+                <svg class="icone"><use href="#i-check" /></svg>
+                Fila vazia. Tudo enviado.
+              </p>
+            </div>
+            <div class="fila__fio"><span></span></div>
+            <div class="fila__servidor">
+              <svg class="icone"><use href="#i-servidor" /></svg>
+              <p class="fila__titulo">Servidor da escola</p>
+              <p class="fila__contador"><strong>0</strong> recebidos</p>
+              <p class="fila__fim">0 duplicados</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao secao--onda historico" aria-labelledby="historico-titulo">
+        <div class="caderno" aria-hidden="true">
+          <div class="caderno__linhas"></div>
+          <div class="caderno__margem"></div>
+        </div>
+        <div class="adesivos" aria-hidden="true">
+          <span class="adesivo adesivo--mochila" data-paralaxe="0.6">
+            <img src="ilustracoes/mochila.svg" alt="" />
+          </span>
+          <span class="adesivo adesivo--onibus" data-paralaxe="0.3">
+            <img src="ilustracoes/onibus.svg" alt="" />
+          </span>
+        </div>
+
+        <div class="secao__dentro historico__grade">
+          <div>
+            <p class="rotulo">Histórico preservado</p>
+            <h2 class="titulo-secao" id="historico-titulo">Nada é apagado.</h2>
+            <p class="texto-corrido" data-revelar>
+              Registro errado é anulado, com justificativa, e continua no histórico. Aluno que saiu
+              da escola é desativado, não excluído.
+            </p>
+          </div>
+
+          <div class="registros" aria-hidden="true">
+            <div class="registro"><b>14/10</b><span>07:06</span><span>Trânsito</span></div>
+            <div class="registro registro--anulado">
+              <b>09/10</b><span>07:21</span><span>Perdeu a hora</span>
+              <span class="registro__risco"></span>
+              <img class="lapis-risco" src="ilustracoes/lapis.svg" alt="" />
+              <span class="selo-anulado">
+                <svg class="icone"><use href="#i-anular" /></svg>
+                Anulado
+              </span>
+              <p class="registro__motivo">Justificativa: registrado no aluno errado.</p>
+            </div>
+            <div class="registro"><b>02/10</b><span>07:12</span><span>Ônibus atrasou</span></div>
+          </div>
+
+          <div class="privacidade" data-revelar>
+            <h3>Foto de aluno é dado pessoal</h3>
+            <ul>
+              <li>
+                <svg class="icone"><use href="#i-cadeado" /></svg>
+                A foto só abre por link assinado, que vale uma hora.
+              </li>
+              <li>
+                <svg class="icone"><use href="#i-cadeado" /></svg>
+                A API atende só no próprio computador da escola.
+              </li>
+              <li>
+                <svg class="icone"><use href="#i-cadeado" /></svg>
+                Os PDFs saem sem foto.
+              </li>
+              <li>
+                <svg class="icone"><use href="#i-cadeado" /></svg>
+                Só a equipe da portaria tem login.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao secao--onda nao-e" aria-labelledby="nao-e-titulo">
+        <div class="secao__dentro">
+          <p class="rotulo">Escopo</p>
+          <h2 class="titulo-secao" id="nao-e-titulo">O que o EduTrack não é.</h2>
+          <ul class="nao-e__lista">
+            <li>
+              <span>Chamada</span>
+              <svg class="risco-mao" viewBox="0 0 400 40" preserveAspectRatio="none">
+                <path d="M6 24C70 12 130 30 200 20S330 12 394 22" />
+              </svg>
+            </li>
+            <li>
+              <span>Controle de frequência</span>
+              <svg class="risco-mao" viewBox="0 0 400 40" preserveAspectRatio="none">
+                <path d="M6 18C80 28 150 10 220 20S340 28 394 16" />
+              </svg>
+            </li>
+            <li>
+              <span>Reconhecimento facial</span>
+              <svg class="risco-mao" viewBox="0 0 400 40" preserveAspectRatio="none">
+                <path d="M6 22C60 14 140 28 210 18S330 14 394 24" />
+              </svg>
+            </li>
+          </ul>
+          <p class="texto-corrido" data-revelar>
+            Ele registra só quem chega atrasado. Quem chega no horário não aparece em lugar nenhum.
+          </p>
+        </div>
+      </section>
+
+      <section class="secao secao--onda projeto" id="projeto" aria-labelledby="projeto-titulo">
+        <div class="secao__dentro projeto__grade">
+          <div class="situacao">
+            <p class="rotulo">Situação do projeto</p>
+            <h2 class="titulo-secao" id="projeto-titulo">Ainda em ambiente de teste.</h2>
+          </div>
+
+          <div class="pilha">
+            <div class="pilha__camada">
+              <small>Tela</small>
+              <p>React 19 · TypeScript · Vite · Tailwind CSS v4 · GSAP · jsPDF</p>
+            </div>
+            <div class="pilha__camada">
+              <small>API</small>
+              <p>Node.js 24 · Fastify · mysql2</p>
+            </div>
+            <div class="pilha__camada">
+              <small>Banco</small>
+              <p>MySQL 8 · migrações em SQL</p>
+            </div>
+            <div class="pilha__acao">
+              <a
+                class="botao botao--amarelo"
+                href="https://github.com/MaxRbrt/EduTrack"
+                target="_blank"
+                rel="noopener"
+              >
+                Ver o código e o README
+                <svg class="icone"><use href="#i-seta" /></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="secao--onda rodape">
+        <div class="adesivos" aria-hidden="true">
+          <span class="adesivo adesivo--estrela-rodape" data-paralaxe="0.5">
+            <img src="ilustracoes/estrela.svg" alt="" />
+          </span>
+          <span class="adesivo adesivo--sino-rodape" data-paralaxe="0.3">
+            <img src="ilustracoes/sino.svg" alt="" />
+          </span>
+        </div>
+        <div class="secao__dentro">
+          <p class="rodape__frase">Até amanhã, <span>07:00.</span></p>
+          <div class="rodape__linha">
+            <span class="marca">
+              <span class="marca__selo">
+                <svg class="icone"><use href="#i-capelo" /></svg>
+              </span>
+              <span class="marca__texto">
+                <strong>EduTrack</strong>
+                <small>Projeto acadêmico · licença a definir</small>
+              </span>
+            </span>
+            <a href="https://github.com/MaxRbrt/EduTrack" target="_blank" rel="noopener"
+              >github.com/MaxRbrt/EduTrack</a
+            >
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
