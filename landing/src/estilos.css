@@ -285,10 +285,9 @@ a {
 }
 
 .cabecalho--claro {
-  background: rgb(255 255 255 / 0.94);
+  background: rgb(255 255 255 / 0.98);
   color: var(--tinta);
   box-shadow: 0 1px 0 rgb(20 33 61 / 0.1);
-  backdrop-filter: blur(10px);
 }
 
 .cabecalho__dentro {
@@ -523,10 +522,9 @@ a {
   padding: 10px 20px;
   border: 2px solid var(--giz-linha);
   border-radius: 999px;
-  background: rgb(20 53 41 / 0.78);
+  background: rgb(20 53 41 / 0.94);
   white-space: nowrap;
   transform: translateX(-50%);
-  backdrop-filter: blur(6px);
   transition: border-color 0.3s;
 }
 
@@ -684,7 +682,6 @@ a {
 .adesivo img {
   display: block;
   width: 100%;
-  filter: drop-shadow(0 10px 12px rgb(20 33 61 / 0.2));
 }
 
 .adesivo--lapis-portaria {
@@ -1649,7 +1646,6 @@ a {
   width: 44px;
   visibility: hidden;
   opacity: 0;
-  filter: drop-shadow(0 6px 6px rgb(20 33 61 / 0.25));
 }
 
 .fila__lado {
@@ -1909,7 +1905,6 @@ a {
   opacity: 0;
   pointer-events: none;
   rotate: 170deg;
-  filter: drop-shadow(0 6px 6px rgb(20 33 61 / 0.25));
 }
 
 .selo-anulado {

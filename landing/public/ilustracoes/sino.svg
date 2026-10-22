@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <path
+    d="M52 8H68Q74 8 74 14V32H46V14Q46 8 52 8ZM32 88C32 60 40 38 60 36C80 38 88 60 88 88H96V98H24V88Z"
+    transform="translate(2 5)"
+    opacity=".16"
+    fill="#14213d"
+    stroke="#14213d"
+    stroke-width="12"
+    stroke-linejoin="round"
+  />
   <g stroke-linejoin="round" stroke-linecap="round">
     <path
       d="M52 8H68Q74 8 74 14V32H46V14Q46 8 52 8ZM32 88C32 60 40 38 60 36C80 38 88 60 88 88H96V98H24V88Z"

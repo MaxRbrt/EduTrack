@@ -144,14 +144,7 @@
           preserveAspectRatio="xMidYMid slice"
           aria-hidden="true"
         >
-          <defs>
-            <filter id="giz-aspero">
-              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="ruido" />
-              <feDisplacementMap in="SourceGraphic" in2="ruido" scale="3" />
-            </filter>
-          </defs>
           <g
-            filter="url(#giz-aspero)"
             fill="none"
             stroke="currentColor"
             stroke-width="3"
@@ -188,7 +181,7 @@
               <path class="rabisco" d="M812 598L798 616" />
             </g>
           </g>
-          <g filter="url(#giz-aspero)" fill="currentColor">
+          <g fill="currentColor">
             <text class="rabisco-texto" x="560" y="128" transform="rotate(-4 560 128)">
               a² + b² = c²
             </text>

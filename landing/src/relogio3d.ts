@@ -18,6 +18,9 @@ const TAMANHO_TEXTURA = 1024;
 const MINUTO_PORTAO = 7 * 60;
 const INCLINACAO_BASE = { x: 0.08, y: -0.24 };
 const INCLINACAO_MOUSE = 0.14;
+const RESOLUCAO_PADRAO = 2;
+const RESOLUCAO_ECONOMICA = 1.5;
+const INTERVALO_QUADRO_TOQUE_MS = 1000 / 60 - 2;
 
 export interface Relogio {
   definirMinutos(minutosDoDia: number): void;
@@ -228,13 +231,12 @@ function criarMostrador(): THREE.Mesh {
 }
 
 function criarVidro(): THREE.Mesh {
-  const material = new THREE.MeshPhysicalMaterial({
+  const material = new THREE.MeshStandardMaterial({
     color: '#ffffff',
     transparent: true,
     opacity: 0.08,
     roughness: 0.04,
     metalness: 0,
-    clearcoat: 1,
     depthWrite: false,
   });
 
@@ -361,14 +363,20 @@ function criarSombraNaLousa(): THREE.Mesh {
 // ============================================================
 // 5. CENA, LUZ E RENDERIZADOR
 // Ambiente RoomEnvironment dá reflexo no aro. Luz direcional faz sombra do ponteiro.
+// Econômico (tela de toque): resolução 1.5x e sem mapa de sombra = bem menos GPU.
 // ============================================================
 
-function criarRenderizador(canvas: HTMLCanvasElement): THREE.WebGLRenderer | null {
+function criarRenderizador(
+  canvas: HTMLCanvasElement,
+  economico: boolean,
+): THREE.WebGLRenderer | null {
+  const limiteDeResolucao = economico ? RESOLUCAO_ECONOMICA : RESOLUCAO_PADRAO;
+
   try {
     const renderizador = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderizador.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderizador.setPixelRatio(Math.min(window.devicePixelRatio, limiteDeResolucao));
     renderizador.toneMapping = THREE.NeutralToneMapping;
-    renderizador.shadowMap.enabled = true;
+    renderizador.shadowMap.enabled = !economico;
     renderizador.shadowMap.type = THREE.PCFShadowMap;
     return renderizador;
   } catch {
@@ -376,7 +384,7 @@ function criarRenderizador(canvas: HTMLCanvasElement): THREE.WebGLRenderer | nul
   }
 }
 
-function iluminar(cena: THREE.Scene, renderizador: THREE.WebGLRenderer): void {
+function iluminar(cena: THREE.Scene, renderizador: THREE.WebGLRenderer, economico: boolean): void {
   const gerador = new THREE.PMREMGenerator(renderizador);
   cena.environment = gerador.fromScene(new RoomEnvironment(), 0.04).texture;
   cena.environmentIntensity = 0.7;
@@ -384,7 +392,7 @@ function iluminar(cena: THREE.Scene, renderizador: THREE.WebGLRenderer): void {
 
   const luz = new THREE.DirectionalLight('#ffffff', 1.6);
   luz.position.set(-2.2, 3, 4);
-  luz.castShadow = true;
+  luz.castShadow = !economico;
   luz.shadow.mapSize.set(1024, 1024);
   luz.shadow.camera.left = -1.4;
   luz.shadow.camera.right = 1.4;
@@ -409,8 +417,14 @@ async function esperarFontes(): Promise<void> {
 // ============================================================
 // 6. RELÓGIO MONTADO
 // Rolagem define minuto e hora. Segundo anda sozinho, com tique mecânico.
-// Loop só roda com relógio visível. Movimento reduzido = desenha só quando muda.
+// Desenha só quando algo muda: tique do segundo, inclinação do mouse, rolagem,
+// entrada. Fora disso GPU fica parada. Tela de toque: no máximo 60 quadros/s.
+// Montagem em etapas, uma por quadro, com shader compilado em paralelo:
+// nada de travar a página de uma vez só.
 // ============================================================
+
+const esperarQuadro = (): Promise<void> =>
+  new Promise((resolver) => requestAnimationFrame(() => resolver()));
 
 function anguloDoSegundo(segundos: number): number {
   const inteiro = Math.floor(segundos);
@@ -424,7 +438,8 @@ export async function criarRelogio(
   canvas: HTMLCanvasElement,
   movimentoReduzido: boolean,
 ): Promise<Relogio | null> {
-  const renderizador = criarRenderizador(canvas);
+  const economico = window.matchMedia('(pointer: coarse)').matches;
+  const renderizador = criarRenderizador(canvas, economico);
   if (!renderizador) {
     return null;
   }
@@ -434,7 +449,8 @@ export async function criarRelogio(
   const cena = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 50);
   camera.position.set(0, 0, 6.4);
-  iluminar(cena, renderizador);
+  iluminar(cena, renderizador, economico);
+  await esperarQuadro();
 
   const ponteiros = criarPonteiros();
   const setor = criarSetorAtraso();
@@ -446,9 +462,33 @@ export async function criarRelogio(
   const giro = new THREE.Group();
   giro.add(relogio);
   cena.add(criarSombraNaLousa(), giro);
+  await esperarQuadro();
+  await renderizador.compileAsync(cena, camera);
 
   const alvoMouse = { x: 0, y: 0 };
   const inicio = performance.now();
+  const intervaloMinimo = economico ? INTERVALO_QUADRO_TOQUE_MS : 0;
+  let pedidoDeDesenho = true;
+  let ultimoAngulo = Number.NaN;
+  let ultimoDesenho = 0;
+
+  const pedirDesenho = (): void => {
+    pedidoDeDesenho = true;
+  };
+
+  const inclinar = (): boolean => {
+    const faltaX = alvoMouse.y * INCLINACAO_MOUSE - giro.rotation.x;
+    const faltaY = alvoMouse.x * INCLINACAO_MOUSE - giro.rotation.y;
+    const jaChegou = Math.abs(faltaX) < 0.0005 && Math.abs(faltaY) < 0.0005;
+
+    if (jaChegou) {
+      return false;
+    }
+
+    giro.rotation.x += faltaX * 0.06;
+    giro.rotation.y += faltaY * 0.06;
+    return true;
+  };
 
   const ajustarTamanho = (): void => {
     const largura = canvas.clientWidth;
@@ -465,13 +505,26 @@ export async function criarRelogio(
     renderizador.render(cena, camera);
   };
 
-  const desenharQuadro = (): void => {
-    const segundos = (performance.now() - inicio) / 1000;
-    ponteiros.segundo.rotation.z = -anguloDoSegundo(segundos);
+  const desenharQuadro = (agora: number): void => {
+    const cedoDemais = agora - ultimoDesenho < intervaloMinimo;
 
-    giro.rotation.x += (alvoMouse.y * INCLINACAO_MOUSE - giro.rotation.x) * 0.06;
-    giro.rotation.y += (alvoMouse.x * INCLINACAO_MOUSE - giro.rotation.y) * 0.06;
+    if (cedoDemais) {
+      return;
+    }
 
+    const angulo = anguloDoSegundo((agora - inicio) / 1000);
+    const segundoAndou = angulo !== ultimoAngulo;
+    const inclinou = inclinar();
+    const nadaMudou = !segundoAndou && !inclinou && !pedidoDeDesenho;
+
+    if (nadaMudou) {
+      return;
+    }
+
+    ponteiros.segundo.rotation.z = -angulo;
+    ultimoAngulo = angulo;
+    ultimoDesenho = agora;
+    pedidoDeDesenho = false;
     renderizador.render(cena, camera);
   };
 
@@ -493,8 +546,16 @@ export async function criarRelogio(
       y: INCLINACAO_BASE.y - 1.3,
       duration: 2,
       ease: 'expo.out',
+      onUpdate: pedirDesenho,
     });
-    gsap.from(relogio.scale, { x: 0.8, y: 0.8, z: 0.8, duration: 1.6, ease: 'expo.out' });
+    gsap.from(relogio.scale, {
+      x: 0.8,
+      y: 0.8,
+      z: 0.8,
+      duration: 1.6,
+      ease: 'expo.out',
+      onUpdate: pedirDesenho,
+    });
   }
 
   return {
@@ -506,6 +567,7 @@ export async function criarRelogio(
       ponteiros.minuto.rotation.z = -(minutoDaHora / 60) * VOLTA;
       ponteiros.hora.rotation.z = -(horaDoMostrador / 12) * VOLTA;
       setor.material.uniforms.uAngulo.value = (minutosDeAtraso / 60) * VOLTA;
+      pedirDesenho();
 
       if (movimentoReduzido) {
         renderizador.render(cena, camera);

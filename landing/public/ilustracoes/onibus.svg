@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 104">
+  <g transform="translate(2 4)" opacity=".16" fill="#14213d" stroke="#14213d" stroke-linejoin="round">
+    <path
+      d="M10 70V32Q10 22 20 22H112Q124 22 128 34L134 52V70Q134 78 126 78H18Q10 78 10 70Z"
+      stroke-width="12"
+    />
+    <circle cx="36" cy="82" r="13" stroke-width="8" />
+    <circle cx="106" cy="82" r="13" stroke-width="8" />
+  </g>
   <g stroke-linejoin="round" stroke-linecap="round">
     <path
       d="M10 70V32Q10 22 20 22H112Q124 22 128 34L134 52V70Q134 78 126 78H18Q10 78 10 70Z"

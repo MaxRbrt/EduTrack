@@ -101,10 +101,11 @@ export function iniciarRevelacao(): void {
 // ============================================================
 // 4. ADESIVOS
 // Cada adesivo anda na rolagem em velocidade própria (data-paralaxe) e flutua.
+// Flutuação pausa com a seção fora da tela: nada se mexe sem ninguém ver.
 // Ônibus atravessa o caderno da esquerda pra direita.
 // ============================================================
 
-function flutuar(imagem: Element, indice: number): void {
+function flutuar(imagem: Element, indice: number, area: Element): void {
   const sentido = indice % 2 === 0 ? 1 : -1;
 
   gsap.to(imagem, {
@@ -114,6 +115,12 @@ function flutuar(imagem: Element, indice: number): void {
     ease: 'sine.inOut',
     yoyo: true,
     repeat: -1,
+    scrollTrigger: {
+      trigger: area,
+      start: 'top bottom',
+      end: 'bottom top',
+      toggleActions: 'play pause resume pause',
+    },
   });
 }
 
@@ -136,7 +143,8 @@ function deslocarNaRolagem(adesivo: HTMLElement): void {
 export function iniciarAdesivos(): void {
   gsap.utils.toArray<HTMLElement>('.adesivo').forEach((adesivo, indice) => {
     deslocarNaRolagem(adesivo);
-    flutuar(adesivo.querySelector('img') ?? adesivo, indice);
+    const area = adesivo.closest('section, footer') ?? adesivo;
+    flutuar(adesivo.querySelector('img') ?? adesivo, indice, area);
   });
 
   gsap.fromTo(
